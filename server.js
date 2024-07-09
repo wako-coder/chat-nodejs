@@ -3,6 +3,11 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
+
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+
 const {
   userJoin,
   getCurrentUser,
@@ -11,9 +16,23 @@ const {
 } = require('./utils/users');
 
 const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 const server = http.createServer(app);
 const io = socketio(server);
 
+
+
+
+app.get('/api/users', (req, res) => {
+
+});
+
+app.post('/api/users', (req, res) => {
+
+});
+
+// Define more routes as needed
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
