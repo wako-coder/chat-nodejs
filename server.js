@@ -14,10 +14,12 @@ const {
   userLeave,
   getRoomUsers
 } = require('./utils/users');
+const { log } = require('console');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+
 const server = http.createServer(app);
 const io = socketio(server);
 
@@ -25,15 +27,30 @@ const io = socketio(server);
 
 
 app.get('/api/users', (req, res) => {
+  console.log(req);
+  res.json(req.body);
 
 });
 
 app.post('/api/users', (req, res) => {
-
+  console.log('Received POST request:', req.body);
+  const { name } = req.body;
+ 
+  const createdUser = { id: 3, name: name };
+  res.status(201).json(req.body);
 });
 
-// Define more routes as needed
-// Set static folder
+
+app.post('/api/messages', (req, res) => {
+  const { content, sender } = req.body;
+  
+  // Broadcast the message to all connected clients
+  io.emit('chat message', { content, sender });
+
+  res.status(200).json({ success: true, message: 'Message sent successfully.' });
+});
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const botName = 'Chat Bot';
